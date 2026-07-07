@@ -18,6 +18,22 @@ jobs:
           flutter-version: '3.24.0'
           channel: 'stable'
 
+      - name: Create Flutter scaffold if missing
+        run: |
+          if [ ! -f "pubspec.yaml" ]; then
+            flutter create --org com.scansetu --project-name scansetu_app --platforms android tmp_project
+            cp -n tmp_project/pubspec.yaml . || true
+            cp -rn tmp_project/lib . || true
+            cp -rn tmp_project/android/gradle . || true
+            cp -n tmp_project/android/build.gradle android/ || true
+            cp -n tmp_project/android/settings.gradle android/ || true
+            cp -n tmp_project/android/gradle.properties android/ || true
+            cp -n tmp_project/android/gradlew android/ || true
+            cp -n tmp_project/android/gradlew.bat android/ || true
+            cp -n tmp_project/android/local.properties android/ || true 2>/dev/null || true
+            rm -rf tmp_project
+          fi
+
       - name: Get dependencies
         run: flutter pub get
 
